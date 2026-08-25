@@ -16,7 +16,7 @@ For local human-user testing, sign in first:
 
 ```sh
 az logout
-az login --tenant 78a465d8-9ae4-44b5-a3b3-e027f58883a8 --scope "https://ossrdbms-aad.database.windows.net/.default"
+az login --tenant <tenant-id> --scope "https://ossrdbms-aad.database.windows.net/.default"
 ```
 
 If the secure cluster has public access disabled, run this from a host with private endpoint network and DNS access.
@@ -48,7 +48,7 @@ Try creating the `workload-identity-test-eus1` identity as `readWrite` on `appdb
 
 ```sh
 python3 tests/documentdb/documentdb_entra_rbac_test.py create-user \
-  --principal-object-id 16d922ac-481a-4590-9224-43260593adde \
+  --principal-object-id <object-id> \
   --principal-type securityPrincipal \
   --database appdb \
   --role readWrite \
@@ -59,7 +59,7 @@ If DocumentDB accepts the create but the user already exists, re-run with:
 
 ```sh
 python3 tests/documentdb/documentdb_entra_rbac_test.py create-user \
-  --principal-object-id 16d922ac-481a-4590-9224-43260593adde \
+  --principal-object-id <object-id> \
   --principal-type securityPrincipal \
   --database appdb \
   --role readWrite \
@@ -70,14 +70,14 @@ For a managed identity or workload identity runtime, pass the client ID used by 
 
 ```sh
 python3 tests/documentdb/documentdb_entra_rbac_test.py ping \
-  --azure-client-id 297edc90-e4d5-4458-97a6-9abde739a33c
+  --azure-client-id <client-id>
 ```
 
 To test the documented non-root cluster-wide write combination:
 
 ```sh
 python3 tests/documentdb/documentdb_entra_rbac_test.py create-user \
-  --principal-object-id 262ced97-58f2-48d2-a171-0f71dfbc9690 \
+  --principal-object-id <object-id> \
   --principal-type securityPrincipal \
   --database admin \
   --role readWriteAnyDatabase \
@@ -91,8 +91,8 @@ This grants broad cluster-level privileges. Do not run it unless that access is 
 Validated with `drobson@drocx.com` as the Entra admin. Exact commands, source links, and full error payloads are captured in `LIVE_RESULTS.md`.
 
 | Test | Result |
-|------|--------|
-| `token` | Succeeded with audience `https://ossrdbms-aad.database.windows.net` and object ID `0125c124-d550-446f-b621-8bb7917c2404` |
+| ------ | -------- |
+| `token` | Succeeded with audience `https://ossrdbms-aad.database.windows.net` and object ID |
 | `ping` | Succeeded |
 | `create-user --database appdb --role readWrite --ensure-database` | Seeded `appdb`, then rejected with `Unsupported value specified for db. Only 'admin' is allowed.` |
 | `create-user --database admin --role readWriteAny` | Rejected with `The specified value for the role is invalid: 'readWriteAny'.` |
